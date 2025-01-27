@@ -7,8 +7,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { BookMarked, CalendarX2, Clock, VideoIcon } from "lucide-react";
+import { format } from "date-fns";
+import { BookMarked, CalendarX2, Clock } from "lucide-react";
+import Image from "next/image";
 import { notFound } from "next/navigation";
+import React from "react";
 
 async function getData(userName: string, eventUrl: string) {
   const eventType = await prisma.eventType.findFirst({
@@ -48,13 +51,23 @@ async function getData(userName: string, eventUrl: string) {
   return eventType;
 }
 
-const BookingPage = async ({
-  params,
-  searchParams,
-}: {
-  params: { userName: string; eventUrl: string };
-  searchParams: { date?: string; time?: string };
-}) => {
+interface Props {
+  params: Promise<{
+    userName: string;
+    eventUrl: string;
+  }>;
+  searchParams: Promise<{
+    date?: string;
+    time?: string;
+  }>
+}
+
+//@ts-ignore
+const BookingPage = async ({props}: Props) => {
+const searchParams = await props.searchParams;
+  const params = await props.params;
+
+
   const selectedDate = searchParams.date
     ? new Date(searchParams.date)
     : new Date();
@@ -74,10 +87,12 @@ const BookingPage = async ({
         <Card className="max-w-[600px]">
           <CardContent className="p-5 grid md:grid-cols-[1fr,auto,1fr] gap-4">
             <div>
-              <img
-                src={eventType.User?.image || ""}
-                alt="User Profile"
-                className="size-10 rounded-full"
+              <Image
+                src={eventType.User?.image as string}
+                alt={`${eventType.User?.name}'s profile picture`}
+                className="size-9 rounded-full"
+                width={30}
+                height={30}
               />
               <p className="text-sm font-medium text-muted-foreground mt-1">
                 {eventType.User?.name}
@@ -141,9 +156,16 @@ const BookingPage = async ({
           </CardContent>
         </Card>
       ) : (
-        <Card className="max-w-[1000px] w-full mx-auto">
+        <Card className="w-full max-w-[1000px] mx-auto">
           <CardContent className="p-5 md:grid md:grid-cols-[1fr,auto,1fr,auto,1fr] md:gap-4">
             <div>
+              <Image
+                src={eventType.User?.image as string}
+                alt={`${eventType.User?.name}'s profile picture`}
+                className="size-9 rounded-full"
+                width={30}
+                height={30}
+              />
               <p className="text-sm font-medium text-muted-foreground mt-1">
                 {eventType.User?.name}
               </p>
@@ -153,19 +175,19 @@ const BookingPage = async ({
               </p>
               <div className="mt-5 grid gap-y-3">
                 <p className="flex items-center">
-                  <CalendarX2 className="w-4 h-4 mr-2 text-primary" />
+                  <CalendarX2 className="size-4 mr-2 text-primary" />
                   <span className="text-sm font-medium text-muted-foreground">
                     {formattedDate}
                   </span>
                 </p>
                 <p className="flex items-center">
-                  <Clock className="w-4 h-4 mr-2 text-primary" />
+                  <Clock className="size-4 mr-2 text-primary" />
                   <span className="text-sm font-medium text-muted-foreground">
                     {eventType.duration} Mins
                   </span>
                 </p>
                 <p className="flex items-center">
-                  <BookMarked className="w-4 h-4 mr-2 text-primary" />
+                  <BookMarked className="size-4 mr-2 text-primary" />
                   <span className="text-sm font-medium text-muted-foreground">
                     Google Meet
                   </span>
@@ -173,13 +195,19 @@ const BookingPage = async ({
               </div>
             </div>
 
-            <Separator orientation="vertical" className="h-full w-[1px]" />
-
-            <RenderCalendar
-              availability={eventType.User?.availability as any}
+            <Separator
+              orientation="vertical"
+              className="hidden md:block h-full w-[1px]"
             />
 
-            <Separator orientation="vertical" className="h-full w-[1px]" />
+            <div className="my-4 md:my-0">
+              <RenderCalendar availability={eventType.User?.availability as any} />
+            </div>
+
+            <Separator
+              orientation="vertical"
+              className="hidden md:block h-full w-[1px]"
+            />
 
             <TimeTable
               selectedDate={selectedDate}

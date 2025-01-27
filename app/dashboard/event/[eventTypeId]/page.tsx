@@ -24,12 +24,16 @@ async function getData(eventTypeId: string) {
   return data;
 }
 
-export default async function EditRoute({
-  params,
-}: {
-  params: { eventTypeId: string };
-}) {
-  const data = await getData(params.eventTypeId);
+interface props {
+  params: Promise<{ eventTypeId: string }>;
+}
+
+//@ts-ignore
+export default async function EditRoute({ props }: props) {
+
+const {eventTypeId} = await props.params;
+
+  const data = await getData(eventTypeId);
 
   console.log(data.videoCallSoftware);
 
