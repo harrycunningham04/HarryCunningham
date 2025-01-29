@@ -86,7 +86,7 @@ const BookingPage = async (props: Props) => {
           <CardContent className="p-5 grid md:grid-cols-[1fr,auto,1fr] gap-4">
             <div>
               <Image
-                src={eventType.User?.image as string}
+                src={eventType.User?.image as string ? eventType.User?.image as string : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAtElEQVR4nO2RQQqCQABF3752tWiRa4/SolV0hK4QCd3IELxTUauKdOmiCeELMYhMOhaBH/5mvr4HMzDkXxIACZCrKRD6hN8AY/WurXOSGnjVgw9B3iDI+hY8fAjSBkHsQxDqQW34FZjjKYEeNFNjn/BeMwY2wKRmm2obtYWvgYvuO6rZ99rOwOpT+A54vj1oobOZGums2stvt67whQU3ji3/WboITi3gRj26CEzH/l4w5Lt5AQ83f+VUwybvAAAAAElFTkSuQmCC"}
                 alt={`${eventType.User?.name}'s profile picture`}
                 className="size-9 rounded-full"
                 width={30}
