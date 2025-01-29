@@ -28,7 +28,6 @@ interface props {
   params: Promise<{ eventTypeId: string }>;
 }
 
-//@ts-ignore
 export default async function EditRoute({ props }: props) {
 
 const {eventTypeId} = await props.params;
