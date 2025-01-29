@@ -52,17 +52,19 @@ async function getData(userName: string, eventUrl: string) {
 }
 
 interface Props {
-  params: {
+  params: Promise<{
     userName: string;
     eventUrl: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     date?: string;
     time?: string;
-  };
+  }>;
 }
 
-const BookingPage = async ({ params, searchParams }: Props) => {
+const BookingPage = async (props: Props) => {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const selectedDate = searchParams.date
     ? new Date(searchParams.date)
     : new Date();
