@@ -15,10 +15,9 @@ interface props {
   params: Promise<{ eventTypeId: string }>;
 }
 
-//@ts-ignore
-const DeleteEventType = async ({ props }: props) => {
+const DeleteEventType = async ( props : props) => {
 
-  const { eventTypeId } = await props.params;
+  const eventTypeId  = await props.params;
 
   return (
     <div className="flex-1 flex items-center justify-center">
@@ -34,7 +33,7 @@ const DeleteEventType = async ({ props }: props) => {
             <Link href="/dashboard">Cancel</Link>
           </Button>
           <form action={DeleteEventTypeAction}>
-            <input type="hidden" name="id" value={eventTypeId} />
+            <input type="hidden" name="id" value={String(eventTypeId)} />
             <Button variant="destructive">Delete</Button>
           </form>
         </CardFooter>
