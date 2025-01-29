@@ -52,25 +52,21 @@ async function getData(userName: string, eventUrl: string) {
 }
 
 interface Props {
-  params: Promise<{
+  params: {
     userName: string;
     eventUrl: string;
-  }>;
-  searchParams: Promise<{
+  };
+  searchParams: {
     date?: string;
     time?: string;
-  }>
+  };
 }
 
-//@ts-ignore
-const BookingPage = async ({props}: Props) => {
-const searchParams = await props.searchParams;
-  const params = await props.params;
-
-
+const BookingPage = async ({ params, searchParams }: Props) => {
   const selectedDate = searchParams.date
     ? new Date(searchParams.date)
     : new Date();
+
   const eventType = await getData(params.userName, params.eventUrl);
 
   const formattedDate = new Intl.DateTimeFormat("en-US", {
@@ -201,7 +197,9 @@ const searchParams = await props.searchParams;
             />
 
             <div className="my-4 md:my-0">
-              <RenderCalendar availability={eventType.User?.availability as any} />
+              <RenderCalendar
+                availability={eventType.User?.availability as any}
+              />
             </div>
 
             <Separator
